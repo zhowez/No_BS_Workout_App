@@ -10,12 +10,29 @@ import SwiftData
 
 @Model
 final class Workout {
-    //var timestamp: Date
     var workoutTitle: String
     var workoutDescription: String
+    var workoutExercises:[Exercise]
     
     init(title: String, description: String) {
         self.workoutTitle = title
         self.workoutDescription = description
+        self.workoutExercises = []
     }
+    
+    init(title: String, description: String, ex:Exercise) {
+        self.workoutTitle = title
+        self.workoutDescription = description
+        self.workoutExercises = []
+        self.workoutExercises.append(ex)
+    }
+    
+    func addExercise(e:Exercise) {
+        self.workoutExercises.append(e)
+    }
+    
+    func getExerciseLength() -> Int {
+        return self.workoutExercises.count
+    }
+
 }

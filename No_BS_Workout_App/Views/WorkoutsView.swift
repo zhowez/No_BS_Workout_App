@@ -11,19 +11,18 @@ import SwiftData
 struct WorkoutsView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var workouts: [Workout]
-    @State var selectedWorkout:Workout? = nil
+    @State var selectedWorkout:Workout = Workout(title: "NAN", description: "NAN")
 
     var body: some View {
         NavigationSplitView {
             List {
                 ForEach(workouts) { workout in
-                    NavigationLink {
-                        WorkoutView(selectedWorkout: $selectedWorkout)
-                    } label: {
-                        Text(workout.workoutTitle)
-                    }.onAppear(perform: {
+                    NavigationLink(destination: WorkoutView(selectedWorkout: $selectedWorkout)
+                        .onAppear {
                         selectedWorkout = workout
-                    })
+                        }) {
+                            Text(workout.workoutTitle)
+                        }
                     
                 }
                 .onDelete(perform: deleteItems)

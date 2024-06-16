@@ -19,3 +19,5 @@ final class Exercise {
         self.exerciseDescription = description
     }
 }
+
+

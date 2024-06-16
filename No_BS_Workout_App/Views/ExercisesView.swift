@@ -11,19 +11,18 @@ import SwiftData
 struct ExercisesView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var exercises: [Exercise]
-    @State var selectedExercise:Exercise? = nil
+    @State var selectedExercise:Exercise = Exercise(title: "NAN", description: "NAN")
 
     var body: some View {
         NavigationSplitView {
             List {
                 ForEach(exercises) { exercise in
-                    NavigationLink {
-                        ExerciseView(selectedExercise: $selectedExercise)
-                    } label: {
-                        Text(exercise.exerciseTitle)
-                    }.onAppear(perform: {
+                    NavigationLink(destination: ExerciseView(selectedExercise: $selectedExercise)
+                        .onAppear {
                         selectedExercise = exercise
-                    })
+                        }) {
+                            Text(exercise.exerciseTitle)
+                        }
                     
                 }
                 .onDelete(perform: deleteItems)
@@ -61,6 +60,8 @@ struct ExercisesView: View {
     
 
 }
+
+
 
 #Preview {
     ExercisesView()
