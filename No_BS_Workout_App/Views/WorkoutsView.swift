@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  WorkoutsView.swift
 //  No_BS_Workout_App
 //
 //  Created by Zach Howes on 6/15/24.
@@ -8,19 +8,23 @@
 import SwiftUI
 import SwiftData
 
-struct ContentView: View {
+struct WorkoutsView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
+    @Query private var workouts: [Workout]
+    @State var selectedWorkout:Workout? = nil
 
     var body: some View {
         NavigationSplitView {
             List {
-                ForEach(items) { item in
+                ForEach(workouts) { workout in
                     NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
+                        WorkoutView(selectedWorkout: $selectedWorkout)
                     } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
+                        Text(workout.workoutTitle)
+                    }.onAppear(perform: {
+                        selectedWorkout = workout
+                    })
+                    
                 }
                 .onDelete(perform: deleteItems)
             }
@@ -29,19 +33,20 @@ struct ContentView: View {
                     EditButton()
                 }
                 ToolbarItem {
-                    Button(action: addItem) {
+                    Button(action: addWorkout) {
                         Label("Add Item", systemImage: "plus")
                     }
                 }
+                    
             }
         } detail: {
             Text("Select an item")
         }
     }
 
-    private func addItem() {
+    private func addWorkout() {
         withAnimation {
-            let newItem = Item(timestamp: Date())
+            let newItem = Workout(title: "New Workout",description: "Edit me")
             modelContext.insert(newItem)
         }
     }
@@ -49,13 +54,16 @@ struct ContentView: View {
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
             for index in offsets {
-                modelContext.delete(items[index])
+                modelContext.delete(workouts[index])
             }
         }
     }
+    
+
 }
 
 #Preview {
-    ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
+    WorkoutsView()
+        .modelContainer(for: Workout.self, inMemory: true)
 }
+
